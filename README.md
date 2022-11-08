@@ -1,2 +1,2 @@
 # book_management_system_new
-一个待完善的安卓的图书管理系统
+一个待完善的安卓的图书管理系统，目前实现了recyclerview，activity之间的数据传递，以及数据序列化保存至本地和反序列化读取。
