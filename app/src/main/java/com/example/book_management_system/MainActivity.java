@@ -23,6 +23,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -67,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
                     case 2:
                         news.book_surface = R.drawable.a3;break;
                 }
-
+                news.publisher = "暨南大学出版社";
+                news.isbn = "6666666666";
                 mNewsList.add(news);
             }
         }
@@ -76,6 +80,17 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mMyAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         mRecyclerView.setLayoutManager(layoutManager);
+        FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(new View.OnClickListener() {     //悬浮按钮监听事件
+            @Override
+            public void onClick(View view) {
+
+                Intent intent=new Intent();
+                intent.setClass(MainActivity.this, AddActivity.class);
+                add_result.launch(intent);
+
+            }
+        });
     }
     class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHoder> {
         private int position;
@@ -107,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
             });
+
 
         }
 
@@ -143,23 +159,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case 1:
+            case 1:     //edit
                 Intent intent=new Intent();
                 intent.putExtra("title",mNewsList.get(mMyAdapter.getContextMenuPosition()).title);
                 intent.putExtra("Author",mNewsList.get(mMyAdapter.getContextMenuPosition()).content);
                 intent.putExtra("book_surface",mNewsList.get(mMyAdapter.getContextMenuPosition()).book_surface);
+                intent.putExtra("isbn",mNewsList.get(mMyAdapter.getContextMenuPosition()).isbn);
+                intent.putExtra("publisher",mNewsList.get(mMyAdapter.getContextMenuPosition()).publisher);
                 intent.setClass(MainActivity.this, EditActivity.class);
                 edit_result.launch(intent);
                 //startActivity(intent);
                 break;
-            case 2:
+            case 2:         //delete
                 //mNewsList.remove(mMyAdapter.getContextMenuPosition());
                 mNewsList.remove(mNewsList.get(mMyAdapter.getContextMenuPosition()));
                 mMyAdapter.notifyItemRemoved(mMyAdapter.getContextMenuPosition());
                 mMyAdapter.notifyItemRangeChanged(0, mMyAdapter.getItemCount());
                 save();
                 break;
-            case 3:
+            case 3:         //add
                 mNewsList.clear();
                 mMyAdapter.notifyItemRangeChanged(0, mMyAdapter.getItemCount());
                 save();
@@ -202,7 +220,29 @@ public class MainActivity extends AppCompatActivity {
                     String author_str = intent.getStringExtra("Author_back");
                     mNewsList.get(mMyAdapter.getContextMenuPosition()).title = title_str;
                     mNewsList.get(mMyAdapter.getContextMenuPosition()).content = author_str;
-                    mMyAdapter.notifyItemRangeChanged(mMyAdapter.getContextMenuPosition(), mMyAdapter.getContextMenuPosition());
+                    mMyAdapter.notifyItemChanged(mMyAdapter.getContextMenuPosition());
+                    save();
+                }
+            });
+
+    public ActivityResultLauncher add_result = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>(){
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent intent = result.getData();
+                    String title_str = intent.getStringExtra("title_back");
+                    String author_str = intent.getStringExtra("Author_back");
+                    String isbn_str = intent.getStringExtra("ISBN_back");
+                    String publi_str = intent.getStringExtra("publisher_back");
+                    News news = new News();
+                    news.content = author_str;
+                    news.title = title_str;
+                    news.isbn = isbn_str;
+                    news.publisher = publi_str;
+                    news.book_surface = R.drawable.a1;
+                    mNewsList.add(news);
+                    mMyAdapter.notifyItemRangeChanged(0, mMyAdapter.getItemCount());
                     save();
                 }
             });

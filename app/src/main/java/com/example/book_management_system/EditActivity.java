@@ -30,13 +30,24 @@ public class EditActivity extends AppCompatActivity{
         setContentView(R.layout.activity_edit);
         btn1=(Button) findViewById(R.id.btn1);
         Intent intent = getIntent();
-        String title_string = intent.getStringExtra("title");
-        String Author_str = intent.getStringExtra("Author");
+
         int book_surface_str = intent.getIntExtra("book_surface",0);
         TextView textView_title = findViewById(R.id.editTextTextTitle);
+        String title_string = intent.getStringExtra("title");
         textView_title.setText(title_string);
+
         TextView Author = findViewById(R.id.editTextBookAuthor);
+        String Author_str = intent.getStringExtra("Author");
         Author.setText(Author_str);
+
+        TextView isbn = findViewById(R.id.editTextBookISBN);
+        String isbn_str = intent.getStringExtra("isbn");
+        isbn.setText(isbn_str);
+
+        TextView Publisher = findViewById(R.id.editTextBookPublisher);
+        String publi_str = intent.getStringExtra("publisher");
+        Publisher.setText(publi_str);
+
         ImageView Image = findViewById(R.id.imageView2);
         Image.setImageResource(book_surface_str);
         btn1.setOnClickListener(new View.OnClickListener() {
