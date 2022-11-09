@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -24,18 +23,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < 50; i++) {
                 News news = new News();
                 news.title = "标题" + i;
-                news.content = "作者" + i;
+                news.Author = "作者" + i;
                 switch (i%3){
                     case 0:
                         news.book_surface = R.drawable.a1;break;
@@ -113,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHoder holder, int position) {
             News news = mNewsList.get(position);
             holder.mTitleTv.setText(news.title);
-            holder.mTitleContent.setText(news.content);
+            holder.mTitleContent.setText(news.Author);
             holder.mBook.setImageResource(news.book_surface);
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -162,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
             case 1:     //edit
                 Intent intent=new Intent();
                 intent.putExtra("title",mNewsList.get(mMyAdapter.getContextMenuPosition()).title);
-                intent.putExtra("Author",mNewsList.get(mMyAdapter.getContextMenuPosition()).content);
+                intent.putExtra("Author",mNewsList.get(mMyAdapter.getContextMenuPosition()).Author);
                 intent.putExtra("book_surface",mNewsList.get(mMyAdapter.getContextMenuPosition()).book_surface);
                 intent.putExtra("isbn",mNewsList.get(mMyAdapter.getContextMenuPosition()).isbn);
                 intent.putExtra("publisher",mNewsList.get(mMyAdapter.getContextMenuPosition()).publisher);
@@ -219,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                     String title_str = intent.getStringExtra("title_back");
                     String author_str = intent.getStringExtra("Author_back");
                     mNewsList.get(mMyAdapter.getContextMenuPosition()).title = title_str;
-                    mNewsList.get(mMyAdapter.getContextMenuPosition()).content = author_str;
+                    mNewsList.get(mMyAdapter.getContextMenuPosition()).Author = author_str;
                     mMyAdapter.notifyItemChanged(mMyAdapter.getContextMenuPosition());
                     save();
                 }
@@ -231,12 +226,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     Intent intent = result.getData();
+                    int result_int = intent.getIntExtra("result",0);
+                    if(result_int == 0)return;
                     String title_str = intent.getStringExtra("title_back");
                     String author_str = intent.getStringExtra("Author_back");
                     String isbn_str = intent.getStringExtra("ISBN_back");
                     String publi_str = intent.getStringExtra("publisher_back");
                     News news = new News();
-                    news.content = author_str;
+                    news.Author = author_str;
                     news.title = title_str;
                     news.isbn = isbn_str;
                     news.publisher = publi_str;
@@ -264,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
     }
     //读取数据
     public void read(){
@@ -272,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
         try{
             in = openFileInput("data123");
             ObjectInputStream ois = new ObjectInputStream(in);
-            Log.e("这里没问题","这里没问题");
+            //Log.e("这里没问题","这里没问题");
             mNewsList = (List<News>) ois.readObject();
         }catch (IOException | ClassNotFoundException e){
             e.printStackTrace();

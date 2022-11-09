@@ -25,6 +25,7 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_OK,intent);
+                intent.putExtra("return",0);
                 finish();
             }
         });
@@ -38,6 +39,7 @@ public class AddActivity extends AppCompatActivity {
                 intent.putExtra("title_back",textView_title.getText().toString());
                 intent.putExtra("ISBN_back",textView_ISBN.getText().toString());
                 intent.putExtra("publisher_back",textView_Publisher.getText().toString());
+                intent.putExtra("return",1);
                 setResult(RESULT_OK,intent);
                 finish();
             }
