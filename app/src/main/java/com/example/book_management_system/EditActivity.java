@@ -55,6 +55,7 @@ public class EditActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 setResult(RESULT_OK,intent);
+                intent.putExtra("return_back","no");
                 finish();
             }
         });
@@ -64,7 +65,10 @@ public class EditActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 String author_back = Author.getText().toString();
+                intent.putExtra("return_back","yes");
                 intent.putExtra("Author_back",author_back);
+                intent.putExtra("ISBN_back",isbn.getText().toString());
+                intent.putExtra("publisher_back",Publisher.getText().toString());
                 intent.putExtra("title_back",textView_title.getText().toString());
                 setResult(RESULT_OK,intent);
                 finish();

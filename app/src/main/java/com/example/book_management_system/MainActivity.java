@@ -172,9 +172,10 @@ public class MainActivity extends AppCompatActivity {
                 mMyAdapter.notifyItemRangeChanged(0, mMyAdapter.getItemCount());
                 save();
                 break;
-            case 3:         //add
+            case 3:         //clear
                 mNewsList.clear();
-                mMyAdapter.notifyItemRangeChanged(0, mMyAdapter.getItemCount());
+
+                mMyAdapter.notifyDataSetChanged();
                 save();
             default:
                 break;
@@ -211,12 +212,19 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     Intent intent = result.getData();
-                    String title_str = intent.getStringExtra("title_back");
-                    String author_str = intent.getStringExtra("Author_back");
-                    mNewsList.get(mMyAdapter.getContextMenuPosition()).title = title_str;
-                    mNewsList.get(mMyAdapter.getContextMenuPosition()).Author = author_str;
-                    mMyAdapter.notifyItemChanged(mMyAdapter.getContextMenuPosition());
-                    save();
+                    String result_str = intent.getStringExtra("return_back");
+                    if(result_str.equals("yes")) {
+                        String title_str = intent.getStringExtra("title_back");
+                        String author_str = intent.getStringExtra("Author_back");
+                        String isbn_str = intent.getStringExtra("ISBN_back");
+                        String publi_str = intent.getStringExtra("publisher_back");
+                        mNewsList.get(mMyAdapter.getContextMenuPosition()).title = title_str;
+                        mNewsList.get(mMyAdapter.getContextMenuPosition()).Author = author_str;
+                        mNewsList.get(mMyAdapter.getContextMenuPosition()).isbn = isbn_str;
+                        mNewsList.get(mMyAdapter.getContextMenuPosition()).publisher = publi_str;
+                        mMyAdapter.notifyItemChanged(mMyAdapter.getContextMenuPosition());
+                        save();
+                    }
                 }
             });
 
