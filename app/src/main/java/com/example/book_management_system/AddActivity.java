@@ -9,12 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class AddActivity extends AppCompatActivity {
-
+    Button btn_cancel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
-        Button btn_cancel=(Button) findViewById(R.id.buttoncancel);
+        btn_cancel=(Button) findViewById(R.id.buttoncancel);
         Intent intent = getIntent();
         TextView textView_title = findViewById(R.id.editTextTextPersonName);
         TextView textView_Anthor = findViewById(R.id.editTextTextPersonName2);
@@ -44,5 +44,10 @@ public class AddActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        //TODO something
+        btn_cancel.callOnClick();
     }
 }

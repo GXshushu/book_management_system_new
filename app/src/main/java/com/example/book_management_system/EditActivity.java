@@ -24,6 +24,7 @@ import java.util.List;
 
 public class EditActivity extends AppCompatActivity{
     Button btn1;
+    Button btn2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class EditActivity extends AppCompatActivity{
                 finish();
             }
         });
-        Button btn2=(Button) findViewById(R.id.button);
+        btn2=(Button) findViewById(R.id.button);
         btn2.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -74,5 +75,11 @@ public class EditActivity extends AppCompatActivity{
                 finish();
             }
         });
+
+    }
+    @Override
+    public void onBackPressed() {
+        //TODO something
+        btn1.callOnClick();
     }
 }

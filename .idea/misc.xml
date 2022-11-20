@@ -7,7 +7,9 @@
         <entry key="..\:/homework/androidwork/book_management_system/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/homework/androidwork/book_management_system/app/src/main/res/layout/activity_add.xml" value="0.25" />
         <entry key="..\:/homework/androidwork/book_management_system/app/src/main/res/layout/activity_edit.xml" value="0.25" />
-        <entry key="..\:/homework/androidwork/book_management_system/app/src/main/res/layout/activity_main.xml" value="0.5" />
+        <entry key="..\:/homework/androidwork/book_management_system/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/homework/androidwork/book_management_system/app/src/main/res/layout/fragment_blank.xml" value="0.19701086956521738" />
+        <entry key="..\:/homework/androidwork/book_management_system/app/src/main/res/layout/fragment_book_list.xml" value="0.19701086956521738" />
         <entry key="..\:/homework/androidwork/book_management_system/app/src/main/res/layout/item_list.xml" value="0.33" />
       </map>
     </option>
