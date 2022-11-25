@@ -1,19 +1,33 @@
 package com.example.book_management_system;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
 
 public class AddActivity extends AppCompatActivity {
     Button btn_cancel;
+    ImageButton imageButton;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+        context = this.getApplicationContext();
         btn_cancel=(Button) findViewById(R.id.buttoncancel);
         Intent intent = getIntent();
         TextView textView_title = findViewById(R.id.editTextTextPersonName);
@@ -44,10 +58,31 @@ public class AddActivity extends AppCompatActivity {
                 finish();
             }
         });
+        imageButton = (ImageButton) findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent gallery = new Intent(Intent.ACTION_PICK);
+                gallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                chooseimage_result.launch(gallery);
+            }
+        });
     }
     @Override
     public void onBackPressed() {
         //TODO something
         btn_cancel.callOnClick();
     }
+    public ActivityResultLauncher chooseimage_result = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>(){
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent intent = result.getData();
+                    Glide.with(context).load(intent.getData()).into(imageButton);
+                    Drawable image = imageButton.getDrawable();
+
+                    onResume();
+                }
+            });
 }
