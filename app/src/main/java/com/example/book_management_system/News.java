@@ -9,4 +9,5 @@ public class News implements Serializable {
     public String publisher;
     public String[] category;
     public int book_surface;    //图片
+    public String imagePath;    //图片文件名
 }

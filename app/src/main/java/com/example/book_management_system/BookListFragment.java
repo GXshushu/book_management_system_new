@@ -2,6 +2,8 @@ package com.example.book_management_system;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -10,7 +12,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -98,6 +100,7 @@ public class BookListFragment extends Fragment {
                 }
                 news.publisher = "暨南大学出版社";
                 news.isbn = "6666666666";
+                news.imagePath="NULL";
                 mNewsList.add(news);
             }
         }
@@ -123,7 +126,7 @@ public class BookListFragment extends Fragment {
         private int position;
         private Context mContext;
         private List<News> mList;
-        public MyAdapter(List<News> fruitList,Context mContext){this.mContext = mContext;this.mList=fruitList;}
+        public MyAdapter(List<News> fruitList, Context mContext){this.mContext = mContext;this.mList=fruitList;}
         public int getContextMenuPosition() { return position; }
         public void setContextMenuPosition(int position) { this.position = position; }
         @NonNull
@@ -141,7 +144,13 @@ public class BookListFragment extends Fragment {
             News news = mNewsList.get(position);
             holder.mTitleTv.setText(news.title);
             holder.mTitleContent.setText(news.Author);
-            holder.mBook.setImageResource(news.book_surface);
+            if(news.imagePath.equals("NULL")) {
+                holder.mBook.setImageResource(news.book_surface);
+            }
+            else{
+                Bitmap bitmap = getResource(news.imagePath);
+                holder.mBook.setImageBitmap(bitmap);
+            }
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -273,12 +282,14 @@ public class BookListFragment extends Fragment {
                         String author_str = intent.getStringExtra("Author_back");
                         String isbn_str = intent.getStringExtra("ISBN_back");
                         String publi_str = intent.getStringExtra("publisher_back");
+                        String imagePath = intent.getStringExtra("Image");
                         News news = new News();
                         news.Author = author_str;
                         news.title = title_str;
                         news.isbn = isbn_str;
                         news.publisher = publi_str;
                         news.book_surface = R.drawable.a1;
+                        news.imagePath = imagePath;
                         mNewsList.add(news);
                         mMyAdapter.notifyItemRangeChanged(0, mMyAdapter.getItemCount());
                         save();
@@ -323,6 +334,16 @@ public class BookListFragment extends Fragment {
                 }
             }
         }
+    }
+    public Bitmap getResource(String imageName) {
+        Bitmap bitmap = null;
+        try {
+            FileInputStream localStream = getActivity().openFileInput(imageName);
+            bitmap = BitmapFactory.decodeStream(localStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
 }

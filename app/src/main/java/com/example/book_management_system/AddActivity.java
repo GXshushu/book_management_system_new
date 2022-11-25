@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +20,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class AddActivity extends AppCompatActivity {
@@ -54,6 +61,13 @@ public class AddActivity extends AppCompatActivity {
                 intent.putExtra("title_back",textView_title.getText().toString());
                 intent.putExtra("ISBN_back",textView_ISBN.getText().toString());
                 intent.putExtra("publisher_back",textView_Publisher.getText().toString());
+
+                Drawable image = imageButton.getDrawable();
+                long timeTamp = System.currentTimeMillis();
+                String imageName = Long.toString(timeTamp);
+                saveDrawableByDrawable(image,imageName,Bitmap.CompressFormat.JPEG);
+                //保存图片文件名
+                intent.putExtra("Image",imageName);
                 setResult(RESULT_OK,intent);
                 finish();
             }
@@ -80,9 +94,38 @@ public class AddActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     Intent intent = result.getData();
                     Glide.with(context).load(intent.getData()).into(imageButton);
-                    Drawable image = imageButton.getDrawable();
-
                     onResume();
                 }
             });
+    public void saveDrawableByDrawable(Drawable drawable, String name, Bitmap.CompressFormat format) {
+        Bitmap bitmap = drawableToBitmap(drawable);
+        saveBitmap(bitmap, name, format);
+    }
+    /**
+     * 将Drawable转化为Bitmap
+     * @param drawable
+     * @return
+     */
+    public Bitmap drawableToBitmap(Drawable drawable) {
+        if(drawable == null)
+            return null;
+        return ((BitmapDrawable)drawable).getBitmap();
+    }
+    public void saveBitmap(Bitmap bitmap, String name, Bitmap.CompressFormat format) {
+        //Log.v();
+        // 创建一个位于SD卡上的文件
+        //File file = new File(name);
+        FileOutputStream out = null;
+        try{
+
+            // 打开指定文件输出流
+            out = this.openFileOutput(name, Context.MODE_PRIVATE);
+            // 将位图输出到指定文件
+            bitmap.compress(format, 100,
+                    out);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
