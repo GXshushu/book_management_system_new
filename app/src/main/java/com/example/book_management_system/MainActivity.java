@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                         mRbMore.setText("More");
                         break;
                     case R.id.radioButton2:
-                        switchFragment(new BlankFragment());
+                        switchFragment(new MoreFragment());
                         mRbBookList.setText("Book List");
                         mRbMore.setText("··More··");
                         break;
