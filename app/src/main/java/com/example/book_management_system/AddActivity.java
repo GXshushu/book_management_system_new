@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -61,7 +64,9 @@ public class AddActivity extends AppCompatActivity {
                 intent.putExtra("title_back",textView_title.getText().toString());
                 intent.putExtra("ISBN_back",textView_ISBN.getText().toString());
                 intent.putExtra("publisher_back",textView_Publisher.getText().toString());
-
+                TextView textView_Category = findViewById(R.id.editTextAddCategory);
+                String category = textView_Category.getText().toString();
+                intent.putExtra("category",category);
                 Drawable image = imageButton.getDrawable();
                 long timeTamp = System.currentTimeMillis();
                 String imageName = Long.toString(timeTamp);
@@ -128,4 +133,5 @@ public class AddActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 }

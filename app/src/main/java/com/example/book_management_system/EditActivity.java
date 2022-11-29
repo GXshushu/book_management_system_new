@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -19,6 +21,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +53,16 @@ public class EditActivity extends AppCompatActivity{
         String publi_str = intent.getStringExtra("publisher");
         Publisher.setText(publi_str);
 
+        String image_path = intent.getStringExtra("image_path");
+
         ImageView Image = findViewById(R.id.imageView2);
-        Image.setImageResource(book_surface_str);
+        if(image_path.equals("NULL")) {
+            Image.setImageResource(book_surface_str);
+        }
+        else{
+            Bitmap bitmap = getResource(image_path);
+            Image.setImageBitmap(bitmap);
+        }
         btn1.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -81,5 +93,15 @@ public class EditActivity extends AppCompatActivity{
     public void onBackPressed() {
         //TODO something
         btn1.callOnClick();
+    }
+    public Bitmap getResource(String imageName) {
+        Bitmap bitmap = null;
+        try {
+            FileInputStream localStream = this.openFileInput(imageName);
+            bitmap = BitmapFactory.decodeStream(localStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 }

@@ -1,93 +1,63 @@
 package com.example.book_management_system;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    private RadioGroup rg;
+    private RadioButton mRbBookList;
+    private RadioButton mRbMore;
+    private Fragment mFragment;
+    //AllBookFragment bookListFragment = new AllBookFragment();
     BookListFragment bookListFragment = new BookListFragment();
-    ArrayList<Fragment>  fragmentsArray = new ArrayList<>();
+    //ArrayList<Fragment>  fragmentsArray = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fragmentsArray.add(bookListFragment);
-        fragmentsArray.add(new BlankFragment());
-        //创建适配器，并传入fragment
-        ViewPaperAdapter viewPaperAdapter = new ViewPaperAdapter(MainActivity.this,fragmentsArray);
-        //添加适配器
-        ViewPager2 viewPager = findViewById(R.id.viewpaper2);
-        viewPager.setAdapter(viewPaperAdapter);
-        viewPager.setCurrentItem(0);
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+        initFragment();
+
+        rg = findViewById(R.id.radioGroup);
+        mRbBookList = findViewById(R.id.radioButton);
+        mRbMore = findViewById(R.id.radioButton2);
+        //RadioGroup切换监听
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                //设置tab的文字
-                switch (position){
-                    case 0:
-                        tab.setText("bookList");
+
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radioButton:
+                        switchFragment(bookListFragment);
+                        mRbBookList.setText("··Book List··");
+                        mRbMore.setText("More");
                         break;
-                    case 1:
-                        tab.setText("blank");
+                    case R.id.radioButton2:
+                        switchFragment(new BlankFragment());
+                        mRbBookList.setText("Book List");
+                        mRbMore.setText("··More··");
+                        break;
+                    default:
                         break;
                 }
-
             }
-        }).attach();
-
-        //ViewPager2提供的滑动监听
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position,positionOffset,positionOffsetPixels);
-            }
-
         });
     }
 
     public BookListFragment getBookListFragment() {
         return bookListFragment;
     }
-
+//    public AllBookFragment getAllBookListFragment(){
+//        return bookListFragment;
+//    }
     public class ViewPaperAdapter extends FragmentStateAdapter {
         private ArrayList<Fragment> mfragments;
         public ViewPaperAdapter(@NonNull FragmentActivity fragmentActivity, ArrayList<Fragment> fragments){
@@ -106,4 +76,26 @@ public class MainActivity extends AppCompatActivity {
             return mfragments.size();
         }
     }
+    private void initFragment() {
+        mFragment = bookListFragment;
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.frameLayout, mFragment).commit();
+    }
+    private void switchFragment(Fragment fragment) {
+        //判断当前显示的Fragment是不是切换的Fragment
+        if (mFragment != fragment) {
+            //判断切换的Fragment是否已经添加过
+            if (!fragment.isAdded()) {
+                //如果没有，则先把当前的Fragment隐藏，把切换的Fragment添加上
+                getSupportFragmentManager().beginTransaction().hide(mFragment)
+                        .add(R.id.frameLayout, fragment).commit();
+            } else {
+                //如果已经添加过，则先把当前的Fragment隐藏，把切换的Fragment显示出来
+                getSupportFragmentManager().beginTransaction()
+                        .hide(mFragment).show(fragment).commit();
+            }
+            mFragment = fragment;
+        }
+    }
+
 }
