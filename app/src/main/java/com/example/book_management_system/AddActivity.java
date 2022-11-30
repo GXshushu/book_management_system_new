@@ -98,7 +98,12 @@ public class AddActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     Intent intent = result.getData();
-                    Glide.with(context).load(intent.getData()).into(imageButton);
+                    try {
+                        Glide.with(context).load(intent.getData()).into(imageButton);
+                    }
+                    catch (Exception e){
+                        ;
+                    }
                     onResume();
                 }
             });

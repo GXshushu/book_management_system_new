@@ -52,6 +52,8 @@ public class AllBookFragment extends Fragment {
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mMyAdapter ;
     List<News> mNewsList = new ArrayList<>();
+    public ActivityResultLauncher edit_result;
+    public ActivityResultLauncher add_result;
     public AllBookFragment() {
         // Required empty public constructor
         this.mCategory = "ALL";
@@ -84,6 +86,58 @@ public class AllBookFragment extends Fragment {
                 DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
         mRecyclerView.addItemDecoration(mDivider);
         File file = new File("/data/user/0/com.example.book_management_system/files/data123");
+
+        edit_result = registerForActivityResult(        //调用editactivity的回调
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>(){
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Intent intent = result.getData();
+                        String result_str = intent.getStringExtra("return_back");
+                        if(result_str.equals("yes")) {
+                            String title_str = intent.getStringExtra("title_back");
+                            String author_str = intent.getStringExtra("Author_back");
+                            String isbn_str = intent.getStringExtra("ISBN_back");
+                            String publi_str = intent.getStringExtra("publisher_back");
+                            mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).title = title_str;
+                            mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).Author = author_str;
+                            mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).isbn = isbn_str;
+                            mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).publisher = publi_str;
+                            mMyAdapter.notifyItemChanged(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition());
+                            save();
+                        }
+                    }
+                });
+
+        add_result = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>(){
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Intent intent = result.getData();
+                        String result_str = intent.getStringExtra("return_back");
+                        //if(result_int == 0)return;
+                        if(result_str.equals("yes")) {
+                            String title_str = intent.getStringExtra("title_back");
+                            String author_str = intent.getStringExtra("Author_back");
+                            String isbn_str = intent.getStringExtra("ISBN_back");
+                            String publi_str = intent.getStringExtra("publisher_back");
+                            String imagePath = intent.getStringExtra("Image");
+                            String category = intent.getStringExtra("category");
+                            News news = new News();
+                            news.Author = author_str;
+                            news.title = title_str;
+                            news.isbn = isbn_str;
+                            news.publisher = publi_str;
+                            news.book_surface = R.drawable.a1;
+                            news.imagePath = imagePath;
+                            news.category = category;
+                            mNewsList.add(news);
+                            mMyAdapter.notifyItemRangeChanged(0, mMyAdapter.getItemCount());
+                            save();
+                        }
+                    }
+                });
 
         if(file.exists()){
             read();
@@ -213,6 +267,7 @@ public class AllBookFragment extends Fragment {
                 intent.putExtra("publisher",mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).publisher);
                 intent.putExtra("image_path",mNewsList.get(((MyAdapter)mMyAdapter).getContextMenuPosition()).imagePath);
                 intent.setClass(getActivity(), EditActivity.class);
+                while(edit_result == null){}
                 edit_result.launch(intent);
                 //startActivity(intent);
                 break;
@@ -256,57 +311,9 @@ public class AllBookFragment extends Fragment {
             }
         }
     }
-    public ActivityResultLauncher edit_result = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>(){
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    Intent intent = result.getData();
-                    String result_str = intent.getStringExtra("return_back");
-                    if(result_str.equals("yes")) {
-                        String title_str = intent.getStringExtra("title_back");
-                        String author_str = intent.getStringExtra("Author_back");
-                        String isbn_str = intent.getStringExtra("ISBN_back");
-                        String publi_str = intent.getStringExtra("publisher_back");
-                        mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).title = title_str;
-                        mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).Author = author_str;
-                        mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).isbn = isbn_str;
-                        mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).publisher = publi_str;
-                        mMyAdapter.notifyItemChanged(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition());
-                        save();
-                    }
-                }
-            });
+    //public ActivityResultLauncher
 
-    public ActivityResultLauncher add_result = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>(){
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    Intent intent = result.getData();
-                    String result_str = intent.getStringExtra("return_back");
-                    //if(result_int == 0)return;
-                    if(result_str.equals("yes")) {
-                        String title_str = intent.getStringExtra("title_back");
-                        String author_str = intent.getStringExtra("Author_back");
-                        String isbn_str = intent.getStringExtra("ISBN_back");
-                        String publi_str = intent.getStringExtra("publisher_back");
-                        String imagePath = intent.getStringExtra("Image");
-                        String category = intent.getStringExtra("category");
-                        News news = new News();
-                        news.Author = author_str;
-                        news.title = title_str;
-                        news.isbn = isbn_str;
-                        news.publisher = publi_str;
-                        news.book_surface = R.drawable.a1;
-                        news.imagePath = imagePath;
-                        news.category = category;
-                        mNewsList.add(news);
-                        mMyAdapter.notifyItemRangeChanged(0, mMyAdapter.getItemCount());
-                        save();
-                    }
-                }
-            });
+
     //保存数据
     public void save(){
         FileOutputStream out = null;
