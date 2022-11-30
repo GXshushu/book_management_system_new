@@ -86,6 +86,26 @@ public class MoreFragment extends Fragment {
                 builder.show();//启动
             }
         });
+        View linearLayout_del = view.findViewById(R.id.linearLayout3);
+        linearLayout_del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText inputServer = new EditText(getActivity());
+                inputServer.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});//设置最多只能输入50个字符
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//构建对话框，一个对话框，上面有输入框了，然后就还要有取消和确认键
+                builder.setIcon(android.R.drawable.ic_dialog_info).setView(inputServer)
+                        .setNegativeButton("取消", null);//设置取消键
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {//设置确认键，且对确认键进行监听
+                    public void onClick(DialogInterface dialog, int which) {
+                        String sign = inputServer.getText().toString();//点击确认后获取输入框的内容
+                        sign = sign.toUpperCase();
+                        mCategory.delCategory(sign);
+                        save();
+                    }
+                });
+                builder.show();//启动
+            }
+        });
         return view;
     }
     //保存数据

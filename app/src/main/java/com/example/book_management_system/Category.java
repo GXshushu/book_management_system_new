@@ -21,6 +21,12 @@ public class Category implements Serializable {
             addCategory(strList[i]);
         }
     }
+    public void delCategory(String str){
+        int pos = category.indexOf(str);
+        if(pos != -1) {
+            category.remove(pos);
+        }
+    }
     public int getLength(){
         return category.size();
     }
