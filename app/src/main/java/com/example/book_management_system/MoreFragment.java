@@ -25,6 +25,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -77,6 +78,7 @@ public class MoreFragment extends Fragment {
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {//设置确认键，且对确认键进行监听
                     public void onClick(DialogInterface dialog, int which) {
                         String sign = inputServer.getText().toString();//点击确认后获取输入框的内容
+                        sign = sign.toUpperCase();
                         mCategory.addCategory(sign);
                         save();
                     }
