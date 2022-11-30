@@ -1,8 +1,9 @@
 package com.example.book_management_system;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Category {
+public class Category implements Serializable {
     private ArrayList<String> category;
 
     Category(){

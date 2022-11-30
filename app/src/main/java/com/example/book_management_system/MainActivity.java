@@ -36,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                 switch (checkedId) {
                     case R.id.radioButton:
+                        bookListFragment = new BookListFragment();
                         switchFragment(bookListFragment);
+
                         mRbBookList.setText("··Book List··");
                         mRbMore.setText("More");
                         break;

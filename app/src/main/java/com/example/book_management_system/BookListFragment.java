@@ -16,12 +16,16 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookListFragment extends Fragment {
     AllBookFragment allBookFragment ;
     List<Fragment> fragmentList = new ArrayList<>();
+    Category category;
     public BookListFragment() {
         // Required empty public constructor
     }
@@ -33,8 +37,11 @@ public class BookListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book_list, container, false);
         allBookFragment = new AllBookFragment();
         fragmentList.add(allBookFragment);
-        Category category = new Category();
-        category.setCategory(new String[]{"ALL","HISTORY","COMPUTER"});
+        read();
+        if(category == null) {
+            category = new Category();
+            category.setCategory(new String[]{"ALL", "HISTORY", "COMPUTER"});
+        }
         for(int i = 1;i < category.getLength();i++){
             fragmentList.add(new CategoryFragment(category.getCategory().get(i)));
         }
@@ -101,5 +108,23 @@ public class BookListFragment extends Fragment {
     public AllBookFragment getAllBookFragment() {
         return allBookFragment;
     }
-
+    public void read(){
+        FileInputStream in = null;
+        try{
+            in = getActivity().openFileInput("category");
+            ObjectInputStream ois = new ObjectInputStream(in);
+            //Log.e("这里没问题","这里没问题");
+            category =  (Category) ois.readObject();
+        }catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }finally {
+            if(in != null){
+                try{
+                    in.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
