@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 
 public class AddActivity extends AppCompatActivity {
@@ -66,6 +67,7 @@ public class AddActivity extends AppCompatActivity {
                 intent.putExtra("publisher_back",textView_Publisher.getText().toString());
                 TextView textView_Category = findViewById(R.id.editTextAddCategory);
                 String category = textView_Category.getText().toString();
+                category = category.toUpperCase();
                 intent.putExtra("category",category);
                 Drawable image = imageButton.getDrawable();
                 long timeTamp = System.currentTimeMillis();
