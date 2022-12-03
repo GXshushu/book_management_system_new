@@ -54,6 +54,7 @@ public class AllBookFragment extends Fragment {
     List<News> mNewsList = new ArrayList<>();
     public ActivityResultLauncher edit_result;
     public ActivityResultLauncher add_result;
+    public ActivityResultLauncher detail_result;
     public AllBookFragment() {
         // Required empty public constructor
         this.mCategory = "ALL";
@@ -139,6 +140,16 @@ public class AllBookFragment extends Fragment {
                     }
                 });
 
+        detail_result = registerForActivityResult(        //调用DetailActivity的回调
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>(){
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Intent intent = result.getData();
+
+                    }
+                });
+
         if(file.exists()){
             read();
         }
@@ -215,13 +226,29 @@ public class AllBookFragment extends Fragment {
                 Bitmap bitmap = getResource(news.imagePath);
                 holder.mBook.setImageBitmap(bitmap);
             }
-                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        setContextMenuPosition(holder.getLayoutPosition());
-                        return false;
-                    }
-                });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    setContextMenuPosition(holder.getLayoutPosition());
+                    return false;
+                }
+            });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setContextMenuPosition(holder.getLayoutPosition());
+                    Intent intent=new Intent();
+                    intent.putExtra("title",mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).title);
+                    intent.putExtra("Author",mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).Author);
+                    intent.putExtra("book_surface",mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).book_surface);
+                    intent.putExtra("isbn",mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).isbn);
+                    intent.putExtra("publisher",mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).publisher);
+                    intent.putExtra("image_path",mNewsList.get(((MyAdapter)mMyAdapter).getContextMenuPosition()).imagePath);
+                    intent.putExtra("category",mNewsList.get(((MyAdapter)mMyAdapter).getContextMenuPosition()).category);
+                    intent.setClass(getActivity(), DetailActivity.class);
+                    detail_result.launch(intent);
+                }
+            });
 
         }
 
@@ -267,7 +294,7 @@ public class AllBookFragment extends Fragment {
                 intent.putExtra("publisher",mNewsList.get(((AllBookFragment.MyAdapter)mMyAdapter).getContextMenuPosition()).publisher);
                 intent.putExtra("image_path",mNewsList.get(((MyAdapter)mMyAdapter).getContextMenuPosition()).imagePath);
                 intent.setClass(getActivity(), EditActivity.class);
-                while(edit_result == null){}
+//                while(edit_result == null){}
                 edit_result.launch(intent);
                 //startActivity(intent);
                 break;

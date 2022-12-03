@@ -1,11 +1,16 @@
 package com.example.book_management_system;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,6 +25,15 @@ public class MainActivity extends AppCompatActivity {
     //AllBookFragment bookListFragment = new AllBookFragment();
     BookListFragment bookListFragment = new BookListFragment();
     //ArrayList<Fragment>  fragmentsArray = new ArrayList<>();
+    public ActivityResultLauncher detail_result = registerForActivityResult(        //调用DetailActivity的回调
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>(){
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent intent = result.getData();
+
+                }
+            });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

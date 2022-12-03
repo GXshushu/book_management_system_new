@@ -1,6 +1,7 @@
 package com.example.book_management_system;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -11,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,14 +27,17 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
     private int position;
     private Context mContext;
     public List<News> mNewsList;
-    public CategoryAdapter(List<News> fruitList, Context mContext){this.mContext = mContext;this.mNewsList=fruitList; }
+    public CategoryAdapter.MyViewHolder myViewHolder;
 
+    public CategoryAdapter(List<News> fruitList, Context mContext){this.mContext = mContext;this.mNewsList=fruitList; }
+    public int getContextMenuPosition() { return position; }
+    public void setContextMenuPosition(int position) { this.position = position; }
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(
                 mContext).inflate(R.layout.item_list, parent,
                 false);
-        CategoryAdapter.MyViewHolder myViewHolder = new CategoryAdapter.MyViewHolder(view);
+        myViewHolder = new CategoryAdapter.MyViewHolder(view);
 
         return myViewHolder;
     }
@@ -45,6 +53,25 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
         else{
             Bitmap bitmap = getResource(news.imagePath);
             holder.mBook.setImageBitmap(bitmap);
+        }
+        if(myViewHolder != null) {
+            myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setContextMenuPosition(myViewHolder.getLayoutPosition());
+                    Log.v("tag", Integer.toString(myViewHolder.getLayoutPosition()));
+                    Intent intent = new Intent();
+                    intent.putExtra("title", mNewsList.get(getContextMenuPosition()).title);
+                    intent.putExtra("Author", mNewsList.get(getContextMenuPosition()).Author);
+                    intent.putExtra("book_surface", mNewsList.get(getContextMenuPosition()).book_surface);
+                    intent.putExtra("isbn", mNewsList.get(getContextMenuPosition()).isbn);
+                    intent.putExtra("publisher", mNewsList.get(getContextMenuPosition()).publisher);
+                    intent.putExtra("image_path", mNewsList.get(getContextMenuPosition()).imagePath);
+                    intent.putExtra("category", mNewsList.get(getContextMenuPosition()).category);
+                    intent.setClass(mContext, DetailActivity.class);
+                    ((MainActivity)mContext).detail_result.launch(intent);
+                }
+            });
         }
 //        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override

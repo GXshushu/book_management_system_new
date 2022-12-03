@@ -1,13 +1,19 @@
 package com.example.book_management_system;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +39,12 @@ public class CategoryFragment extends Fragment {
     public CategoryAdapter mMyAdapter ;
     List<News> mNewsList = new ArrayList<>();
     List<News> mTempList;
+
     String mCategory;
     public CategoryFragment() {
         // Required empty public constructor
     }
+
     public CategoryFragment(String category) {
         this.mCategory = category;
     }
@@ -69,6 +77,7 @@ public class CategoryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_category, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview_category);
+
         DividerItemDecoration mDivider = new
                 DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
         mRecyclerView.addItemDecoration(mDivider);
@@ -99,6 +108,7 @@ public class CategoryFragment extends Fragment {
         mRecyclerView.setAdapter(mMyAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
+
         return view;
     }
     public void save(){
