@@ -86,22 +86,24 @@ public class CategoryFragment extends Fragment {
             read();
         }
         else {
-            // 构造一些数据
-            for (int i = 0; i < 50; i++) {
-                News news = new News();
-                news.title = "标题" + i;
-                news.Author = "作者" + i;
-                switch (i%3){
-                    case 0:
-                        news.book_surface = R.drawable.a1;break;
-                    case 1:
-                        news.book_surface = R.drawable.a2;break;
-                    case 2:
-                        news.book_surface = R.drawable.a3;break;
-                }
-
-                mNewsList.add(news);
-            }
+//            // 构造一些数据
+//            for (int i = 0; i < 50; i++) {
+//                News news = new News();
+//                news.title = "标题" + i;
+//                news.Author = "作者" + i;
+//                switch (i%3){
+//                    case 0:
+//                        news.book_surface = R.drawable.a1;break;
+//                    case 1:
+//                        news.book_surface = R.drawable.a2;break;
+//                    case 2:
+//                        news.book_surface = R.drawable.a3;break;
+//                }
+//                news.publisher = "暨南大学出版社";
+//                news.isbn = "6666666666";
+//                news.imagePath = "NULL";
+//                mNewsList.add(news);
+//            }
         }
 
         mMyAdapter = new CategoryAdapter(mNewsList,getContext());

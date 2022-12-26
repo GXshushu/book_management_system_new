@@ -169,6 +169,7 @@ public class AllBookFragment extends Fragment {
                         news.book_surface = R.drawable.a2;
                         break;
                     case 2:
+                        news.category = "ALL";
                         news.book_surface = R.drawable.a3;
                         break;
                 }
@@ -177,6 +178,7 @@ public class AllBookFragment extends Fragment {
                 news.imagePath = "NULL";
                 mNewsList.add(news);
             }
+            save();
         }
         mMyAdapter = new AllBookFragment.MyAdapter(mNewsList, getContext());
         mRecyclerView.setAdapter(mMyAdapter);
